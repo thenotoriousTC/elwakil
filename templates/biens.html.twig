@@ -1,0 +1,328 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ElWakil - Nos biens immobiliers{% endblock %}
+
+{% block body %}
+    <!-- Hero Section -->
+    <section class="relative h-[60vh] md:h-[500px] flex items-center justify-center text-white overflow-hidden">
+        <!-- Image de fond avec overlay gradient -->
+        <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40 z-10"></div>
+        <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
+            alt="Belle propriété" 
+            class="absolute inset-0 w-full h-full object-cover object-center">
+
+        <!-- Contenu centré -->
+        <div class="container mx-auto px-4 relative z-20 text-center">
+            <div class="max-w-2xl mx-auto">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+                    Trouvez votre <span class="text-yellow-400">propriété idéale</span>
+                </h1>
+                <p class="text-lg md:text-xl mb-8 opacity-90 max-w-lg mx-auto">
+                    Découvrez notre sélection exclusive de biens immobiliers en Algérie
+                </p>
+                
+                <!-- Barre de recherche moderne -->
+                <div class="relative max-w-2xl mx-auto mt-8">
+                    <form method="GET" class="flex flex-col md:flex-row gap-2">
+                        <div class="relative flex-grow">
+                            <input type="text"
+                                name="query"
+                                placeholder="Rechercher votre bien idéal" 
+                                class="w-full py-4 pl-5 pr-12 rounded-full border-0 focus:ring-2 focus:ring-yellow-400 text-gray-900 shadow-lg">
+                            <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded-full transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Indicateurs de confiance -->
+                <div class="mt-12 flex flex-wrap justify-center gap-6 text-sm md:text-base">
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        +500 biens disponibles
+                    </div>
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        Agence certifiée
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Barre de recherche et filtres -->
+    <section id="search-section" class="py-6 bg-gray-50">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+                <form class="space-y-3">
+                    <!-- Ligne 1 - Filtres principaux -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <!-- Transaction -->
+                        <div>
+                            <select name="t" class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-md focus:ring-1 focus:ring-yellow-400 text-gray-700">
+                                <option value="">Vente \ Location</option>
+                                <option value="vente">À vendre</option>
+                                <option value="location">À louer</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Type de bien -->
+                        <div>
+                            <select name="type" class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-md focus:ring-1 focus:ring-yellow-400 text-gray-700">
+                                <option value="">Type de bien</option>
+                                {% for type in types %}
+                                <option value="{{type.id}}">{{type.libelle}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- Wilaya -->
+                        <div>
+                            <select name="wilaya" id="wilaya-select" class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-md focus:ring-1 focus:ring-yellow-400 text-gray-700">
+                                <option value="">Wilaya</option>
+                                {% for wilaya in wilayas %}
+                                    <option value="{{wilaya.id}}" {{ currentWilaya == wilaya.id ? 'selected' : '' }}>{{wilaya.nom}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- Commune -->
+                        <div>
+                            <select name="commune" id="commune-select" {{ not currentWilaya ? 'disabled' : '' }} class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-md focus:ring-1 focus:ring-yellow-400 text-gray-700">
+                                <option value="">Commune</option>
+                                {% if communes %}
+                                    {% for commune in communes %}
+                                        <option value="{{ commune.id }}" {{ currentCommune == commune.id ? 'selected' : '' }}>{{ commune.nom }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <!-- Papier -->
+                        <div>
+                            <select name="papier" class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-md focus:ring-1 focus:ring-yellow-400 text-gray-700">
+                                <option value="">Papier</option>
+                                <option value="Acte de propriété">Acte de propriété</option>
+                                <option value="Livret foncier">Livret foncier</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Ligne 2 - Sliders compacts -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <!-- Prix Range -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Prix (DZD)</span>
+                                <span id="price-values">0 - 50M</span>
+                            </div>
+                            <div id="price-slider" class="h-1 bg-gray-200 rounded-full"></div>
+                            <input type="hidden" id="price-min" name="price_min">
+                            <input type="hidden" id="price-max" name="price_max">
+                        </div>
+                        
+                        <!-- Superficie Range -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Superficie (m²)</span>
+                                <span id="area-values">0 - 10000</span>
+                            </div>
+                            <div id="area-slider" class="h-1 bg-gray-200 rounded-full"></div>
+                            <input type="hidden" id="area-min" name="area_min">
+                            <input type="hidden" id="area-max" name="area_max">
+                        </div>
+                    </div>
+
+                    <!-- Ligne 3 - Boutons -->
+                    <div class="flex justify-between items-center pt-1">
+                        <a href="{{path('biens')}}" type="reset" class="text-xs text-gray-500 hover:text-gray-700 flex items-center">
+                            <i class="fas fa-undo-alt mr-1 text-xs"></i> Réinitialiser
+                        </a>
+                        <button type="submit" name="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white text-xs py-1.5 px-4 rounded-md shadow-sm">
+                            <i class="fas fa-search mr-1"></i> Rechercher
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Liste des biens -->
+    <section class="py-8 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-900">Nos biens disponibles</h2>
+                <div class="flex items-center space-x-4">
+                    <div class="text-gray-600">
+                        <span class="font-medium">{{totalItems}}</span> résultats
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Grille des biens - 4 par ligne -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {% for bien in biens %}
+                    <div class="property-card group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                        <div class="relative h-60 overflow-hidden"> <!-- Réduit de h-64 à h-60 -->
+                            <!-- Carousel pour les images -->
+                            <div class="splide splideImg">
+                                <div class="splide__track">
+                                    <ul class="splide__list">
+                                        {% for image in bien.images %}
+                                        <li class="splide__slide">
+                                            <img src="{{ asset('uploads/biens/' ~ image.image) }}" 
+                                                alt="{{ bien.libelle }}El Wakil immobilier" 
+                                                class="w-full h-full object-cover">
+                                        </li>
+                                        {% else %}
+                                        <li class="splide__slide">
+                                            <img src="{{ asset('uploads/default.jpg') }}" 
+                                                alt="Image par défaut El Wakil immobilier" 
+                                                class="w-full h-full object-cover">
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <!-- Boutons de navigation -->
+                                <div class="splide__arrows">
+                                    <button class="splide__arrow splide__arrow--prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-900 rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md">
+                                        <i class="fas fa-chevron-left text-sm"></i>
+                                    </button>
+                                    <button class="splide__arrow splide__arrow--next absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-900 rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md">
+                                        <i class="fas fa-chevron-right text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Étiquette de type -->
+                            {% if bien.transaction == 'vente' %}                              
+                                <div class="absolute top-3 right-3 bg-yellow-500 text-white font-bold px-2 py-1 rounded-md text-xs">
+                                    À vendre
+                                </div>
+                            {% else %}
+                                <div class="absolute top-3 right-3 bg-gray-800 text-white font-bold px-2 py-1 rounded-md text-xs">
+                                    À louer
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="p-4"> <!-- Réduit de p-5 à p-4 -->
+                            <h3 class="text-lg font-bold text-gray-900 mb-1 truncate">{{bien.libelle}}</h3> <!-- mb-2 à mb-1 -->
+                            <p class="text-gray-600 mb-2 flex items-center text-sm"> <!-- mb-3 à mb-2 -->
+                                <i class="fas fa-map-marker-alt mr-2 text-yellow-500 text-xs"></i> <!-- Ajout text-xs -->
+                                {{bien.commune.nom}}, {{bien.wilaya.nom}}
+                            </p>
+                            <div class="flex flex-wrap gap-2 text-xs text-gray-600 mb-3"> <!-- gap-3 à gap-2, mb-4 à mb-3 -->
+                                <span class="flex items-center bg-gray-50 px-2 py-1 rounded">
+                                    <i class="fas fa-bed mr-1 text-yellow-500 text-xs"></i> <!-- Ajout text-xs -->
+                                    {{bien.piece}} chambres
+                                </span>
+                                <span class="flex items-center bg-gray-50 px-2 py-1 rounded">
+                                    <i class="fas fa-ruler-combined mr-1 text-yellow-500 text-xs"></i> <!-- Ajout text-xs -->
+                                    {{bien.superficie}} m²
+                                </span>
+                            </div>
+                            <div class="text-gray-900 font-bold text-lg mb-3"> <!-- mb-4 à mb-3 -->
+                                {{bien.formattedPrix }}
+                            </div>
+                            <div class="flex space-x-2">
+                                <a href="tel:{{bien.telephone}}" class="flex-1 text-center bg-gray-100 text-gray-800 text-xs font-medium py-2 px-2 rounded-lg hover:bg-gray-200 transition flex items-center justify-center">
+                                    <i class="fas fa-phone mr-1"></i> Appeler
+                                </a>
+                                <a href="{{path('detail', {id:bien.id})}}" class="flex-1 text-center bg-gray-900 text-white text-xs font-medium py-2 px-2 rounded-lg hover:bg-gray-800 transition flex items-center justify-center">
+                                    Voir plus
+                                </a>
+                            </div>
+                        </div>
+                    </div> 
+                {% endfor %}
+            </div>
+            {% if totalItems != 0 %}       
+            <!-- Pagination -->
+            <div class="mt-12 flex justify-center">
+                <nav class="flex items-center space-x-2">
+                    {# Bouton Précédent #}
+                    {% if currentPage > 1 %}
+                        <a href="{{ path('biens', app.request.query.all|merge({'page': currentPage - 1})) }}" 
+                        class="px-3 py-1 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-100">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    {% else %}
+                        <span class="px-3 py-1 rounded-lg border border-gray-300 text-gray-300 cursor-not-allowed">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    {% endif %}
+
+                    {# Première page #}
+                    {% if currentPage > 3 %}
+                        <a href="{{ path('biens', app.request.query.all|merge({'page': 1})) }}" 
+                        class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100">
+                            1
+                        </a>
+                        {% if currentPage > 4 %}
+                            <span class="px-2 py-1 text-gray-500">...</span>
+                        {% endif %}
+                    {% endif %}
+
+                    {# Pages autour de la page courante #}
+                    {% for page in max(1, currentPage - 2)..min(pagesCount, currentPage + 2) %}
+                        <a href="{{ path('biens', app.request.query.all|merge({'page': page})) }}" 
+                        class="px-4 py-2 rounded-lg {% if page == currentPage %}bg-yellow-500 text-white font-bold{% else %}border border-gray-300 text-gray-700 hover:bg-gray-100{% endif %}">
+                            {{ page }}
+                        </a>
+                    {% endfor %}
+
+                    {# Dernière page #}
+                    {% if currentPage < pagesCount - 2 %}
+                        {% if currentPage < pagesCount - 3 %}
+                            <span class="px-2 py-1 text-gray-500">...</span>
+                        {% endif %}
+                        <a href="{{ path('biens', app.request.query.all|merge({'page': pagesCount})) }}" 
+                        class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100">
+                            {{ pagesCount }}
+                        </a>
+                    {% endif %}
+
+                    {# Bouton Suivant #}
+                    {% if currentPage < pagesCount %}
+                        <a href="{{ path('biens', app.request.query.all|merge({'page': currentPage + 1})) }}" 
+                        class="px-3 py-1 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-100">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    {% else %}
+                        <span class="px-3 py-1 rounded-lg border border-gray-300 text-gray-300 cursor-not-allowed">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                    {% endif %}
+                </nav>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    {# <!-- Version discrète et élégante -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end space-y-2">
+        <!-- CTA minimaliste qui apparaît discrètement -->
+        <div id="discreet-cta" class="hidden mb-2 px-4 py-2 bg-black bg-opacity-80 text-white text-sm rounded-full shadow-lg transition-opacity duration-500 flex items-center">
+            <span>📞 Vendez vite votre bien</span>
+            <div class="w-2 h-2 bg-yellow-400 rounded-full ml-2 animate-pulse"></div>
+        </div>
+
+        <!-- Boutons existants - légèrement modifiés pour plus de cohérence -->
+        <div class="flex flex-col space-y-3">
+            <a href="tel:0123456789" class="w-14 h-14 bg-yellow-500 hover:bg-yellow-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all transform hover:scale-105 active:scale-95">
+                <i class="fas fa-phone text-xl"></i>
+            </a>
+            <a href="https://wa.me/0123456789" class="w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all transform hover:scale-105 active:scale-95">
+                <i class="fab fa-whatsapp text-xl"></i>
+            </a>
+        </div>
+    </div> #}
+
+{% endblock %}

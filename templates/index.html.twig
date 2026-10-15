@@ -1,0 +1,500 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ElWakil - Agence Immobilière en Algérie{% endblock %}
+
+{% block body %}
+    <!-- Hero Section - Style Airbnb -->
+    <section class="relative bg-white overflow-hidden">
+        <!-- Fond avec effet blur -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute -top-20 -left-20 w-96 h-96 bg-yellow-100 rounded-full filter blur-[100px] opacity-20"></div>
+            <div class="absolute -bottom-20 -right-20 w-96 h-96 bg-gray-200 rounded-full filter blur-[100px] opacity-20"></div>
+        </div>
+
+        <div class="container mx-auto px-4 py-16 md:py-24 relative z-10">
+            <div class="flex flex-col md:flex-row items-center">
+                <!-- Texte -->
+                <div class="md:w-1/2 mb-12 md:mb-0 md:pr-10">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                        Votre <span class="text-yellow-500">projet immobilier</span> commence ici
+                    </h1>
+                    <p class="text-lg text-gray-600 mb-8 max-w-lg">
+                        ElWakil vous accompagne dans l'acquisition de votre bien idéal en Algérie.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="{{path('biens')}}?t=vente" class="bg-yellow-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-yellow-600 transition flex items-center shadow-lg hover:shadow-xl">
+                            Explorer nos biens
+                        </a>
+                        <a href="tel:0123456789" class="bg-gray-900 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-800 transition flex items-center shadow-lg hover:shadow-xl">
+                            <i class="fas fa-phone mr-2"></i> Nous appeler
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Image avec bordure arabe -->
+                <div class="md:w-1/2 relative">
+                    <div class="relative  rounded-xl overflow-hidden shadow-2xl transform h-[400px] w-full"> <!-- Hauteur fixe ajoutée ici -->
+                        <!-- Carrousel Hero Splide -->
+                        <div class="splide hero-image-slider h-full w-full" id="sliderImg"> <!-- h-full pour prendre toute la hauteur du parent -->
+                            <div class="splide__track h-full w-full">
+                                <ul class="splide__list h-full w-full">
+                                    {% for slide in sliders %}
+                                    <li class="splide__slide h-full">
+                                        <div class="h-full w-full flex items-center justify-center overflow-hidden">
+                                            <img src="{{ asset('uploads/slider/' ~ slide.image) }}" 
+                                                alt="ElWakil Immobilier" 
+                                                class="min-w-full min-h-full object-cover object-center"
+                                                loading="lazy">
+                                        </div>
+                                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/20 to-transparent"></div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Séparation ligne grise -->
+        <div class="border-t border-gray-200"></div>
+    </section>
+    <!-- Carousel des Types -->
+    <section id="types-sticky-section" class="py-6 bg-white border-b border-gray-100 transition-all duration-300">
+        <div class="container mx-auto px-4">
+            <div class="splide" id="types-carousel">
+                <div class="splide__track">
+                    <ul class="splide__list">
+                        {% for type in types %}
+                            <li class="splide__slide">
+                                <a href="{{path('biens')}}?type={{type.id}}" class="flex flex-col items-center pb-3 px-2 group">
+                                    <div class="w-full flex flex-col items-center">
+                                        <div class="p-3 text-gray-700 group-hover:text-gray-900 transition">
+                                            <img src="uploads/icons/{{type.icon}}" alt="{{type.libelle}} Chez El Wakil Immobilier" class="w-6 h-6">
+                                        </div>
+                                        <span class="text-xs font-medium text-gray-700 group-hover:text-gray-900 transition whitespace-nowrap">{{type.libelle}}</span>
+                                        <div class="w-full border-b-2 border-transparent group-hover:border-gray-900 mt-3 transition"></div>
+                                    </div>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <style>
+            /* Personnalisation des flèches Splide */
+            #types-carousel .splide__arrow {
+                width: 1.5rem;
+                height: 1.5rem;
+                opacity: 1;
+                background: white;
+                border: 1px solid #e5e7eb; /* couleur de bordure grise */
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+
+            #types-carousel .splide__arrow svg {
+                width: 0.5rem;
+                height: 0.5rem;
+            }
+
+            /* Positionnement des flèches */
+            #types-carousel .splide__arrow--prev {
+                left: -0.8rem; /* Déplacement vers la gauche */
+            }
+
+            #types-carousel .splide__arrow--next {
+                right: -0.8rem; /* Déplacement vers la droite */
+            }
+
+            /* Effet au survol */
+            #types-carousel .splide__arrow:hover:not(:disabled) {
+                background: #f3f4f6;
+            }
+        </style>
+
+    </section>
+
+    <!-- Nos biens à vendre -->
+    <section class="py-16 bg-white relative overflow-hidden">
+        <!-- Effet blur décoratif -->
+        <div class="absolute -top-20 -left-20 w-96 h-96 bg-yellow-100 rounded-full filter blur-[100px] opacity-10 z-0"></div>
+        <div class="absolute -bottom-20 -right-20 w-96 h-96 bg-gray-200 rounded-full filter blur-[100px] opacity-10 z-0"></div>
+
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-3">Nos dernières offres</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Découvrez notre sélection de biens exclusifs</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {% for bien in biens %}
+                    <div class="property-card group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                        <div class="relative h-60 overflow-hidden"> <!-- Réduit de h-64 à h-60 -->
+                            <!-- Carousel pour les images -->
+                            <div class="splide splideImg">
+                                <div class="splide__track">
+                                    <ul class="splide__list">
+                                        {% for image in bien.images %}
+                                        <li class="splide__slide">
+                                            <img src="{{ asset('uploads/biens/' ~ image.image) }}" 
+                                                alt="{{ bien.libelle }}El Wakil immobilier" 
+                                                class="w-full h-full object-cover">
+                                        </li>
+                                        {% else %}
+                                        <li class="splide__slide">
+                                            <img src="{{ asset('uploads/default.jpg') }}" 
+                                                alt="Image par défaut El Wakil immobilier" 
+                                                class="w-full h-full object-cover">
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <!-- Boutons de navigation -->
+                                <div class="splide__arrows">
+                                    <button class="splide__arrow splide__arrow--prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-900 rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md">
+                                        <i class="fas fa-chevron-left text-sm"></i>
+                                    </button>
+                                    <button class="splide__arrow splide__arrow--next absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-900 rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md">
+                                        <i class="fas fa-chevron-right text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Étiquette de type -->
+                            {% if bien.transaction == 'vente' %}                              
+                                <div class="absolute top-3 right-3 bg-yellow-500 text-white font-bold px-2 py-1 rounded-md text-xs">
+                                    À vendre
+                                </div>
+                            {% else %}
+                                <div class="absolute top-3 right-3 bg-gray-800 text-white font-bold px-2 py-1 rounded-md text-xs">
+                                    À louer
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="p-4"> <!-- Réduit de p-5 à p-4 -->
+                            <h3 class="text-lg font-bold text-gray-900 mb-1 truncate">{{bien.libelle}}</h3> <!-- mb-2 à mb-1 -->
+                            <p class="text-gray-600 mb-2 flex items-center text-sm"> <!-- mb-3 à mb-2 -->
+                                <i class="fas fa-map-marker-alt mr-2 text-yellow-500 text-xs"></i> <!-- Ajout text-xs -->
+                                {{bien.commune.nom}}, {{bien.wilaya.nom}}
+                            </p>
+                            <div class="flex flex-wrap gap-2 text-xs text-gray-600 mb-3"> <!-- gap-3 à gap-2, mb-4 à mb-3 -->
+                                <span class="flex items-center bg-gray-50 px-2 py-1 rounded">
+                                    <i class="fas fa-bed mr-1 text-yellow-500 text-xs"></i> <!-- Ajout text-xs -->
+                                    {{bien.piece}} chambres
+                                </span>
+                                <span class="flex items-center bg-gray-50 px-2 py-1 rounded">
+                                    <i class="fas fa-ruler-combined mr-1 text-yellow-500 text-xs"></i> <!-- Ajout text-xs -->
+                                    {{bien.superficie}} m²
+                                </span>
+                            </div>
+                            <div class="text-gray-900 font-bold text-lg mb-3"> <!-- mb-4 à mb-3 -->
+                                {{bien.formattedPrix }}
+                            </div>
+                            <div class="flex space-x-2">
+                                <a href="tel:{{bien.telephone}}" class="flex-1 text-center bg-gray-100 text-gray-800 text-xs font-medium py-2 px-2 rounded-lg hover:bg-gray-200 transition flex items-center justify-center">
+                                    <i class="fas fa-phone mr-1"></i> Appeler
+                                </a>
+                                <a href="{{path('detail', {id:bien.id})}}" class="flex-1 text-center bg-gray-900 text-white text-xs font-medium py-2 px-2 rounded-lg hover:bg-gray-800 transition flex items-center justify-center">
+                                    Voir plus
+                                </a>
+                            </div>
+                        </div>
+                    </div>   
+                {% endfor %}       
+            </div>
+
+            <!-- Bouton "Voir plus" avec effet moderne -->
+            <div class="text-center mt-12">
+                <a href="{{path('biens')}}" class="inline-block relative overflow-hidden group bg-yellow-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <span class="relative z-10">Voir plus de biens</span>
+                    <span class="absolute inset-0 bg-yellow-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -translate-x-full group-hover:translate-x-0"></span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section À propos - Optimisée SEO & UX -->
+    <section class="py-16 bg-gray-50" id="a-propos">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <!-- Image avec effet moderne -->
+                <div class="lg:w-1/2 relative">
+                    <div class="relative rounded-xl overflow-hidden shadow-xl">
+                        <img src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
+                            alt="Équipe ElWakil Immobilier Algérie" 
+                            class="w-full h-auto object-cover"
+                            loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-gray-900/10"></div>
+                    </div>
+                    <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-yellow-500 rounded-full opacity-20 filter blur-xl"></div>
+                </div>
+
+                <!-- Contenu texte optimisé SEO -->
+                <div class="lg:w-1/2">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                        <span class="text-yellow-500">ElWakil Immobilier</span> - Votre Partenaire de Confiance en Algérie
+                    </h2>
+                    
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Fondée en 2010, <strong class="text-gray-900">ElWakil Immobilier</strong> s'est imposée comme l'agence de référence pour la <strong>transaction immobilière en Algérie</strong>. Notre expertise locale et notre approche personnalisée nous permettent d'offrir un service premium tant aux particuliers qu'aux investisseurs.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-500">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Notre Expertise</h3>
+                                <p class="text-gray-600">
+                                    Plus de <strong>1.200 transactions</strong> réalisées à travers tout le pays. Spécialistes du marché algérien, nous maîtrisons les particularités régionales pour vous conseiller au mieux.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-500">
+                                    <i class="fas fa-handshake"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Notre Engagement</h3>
+                                <p class="text-gray-600">
+                                    <strong>Transparence absolue</strong> et suivi personnalisé. Chaque client bénéficie d'un conseiller dédié tout au long du processus.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-500">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Notre Réseau</h3>
+                                <p class="text-gray-600">
+                                    Accès exclusif à des <strong>biens premium</strong> grâce à notre réseau de partenaires et notre présence dans 12 wilayas.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA avec tracking potentiel -->
+                    <div class="mt-8 flex flex-wrap gap-4">
+                        <a href="#contact" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg">
+                            Contactez notre équipe
+                        </a>
+                        <a href="tel:{{parametres.telephone}}" class="border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-bold py-3 px-6 rounded-lg transition duration-300 flex items-center">
+                            <i class="fas fa-phone mr-2"></i> {{parametres.telephone}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Chiffres Clés - À placer après "À propos" -->
+    <section class="py-16 bg-white relative overflow-hidden" id="chiffresCles">
+        <!-- Effets décoratifs -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute -top-20 -left-20 w-64 h-64 bg-yellow-100 rounded-full filter blur-[80px] opacity-20"></div>
+            <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-gray-200 rounded-full filter blur-[80px] opacity-20"></div>
+        </div>
+
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">ElWakil en chiffres</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Notre impact dans le secteur immobilier algérien</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Chiffre 1 -->
+                <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+                    <div class="text-yellow-500 text-4xl font-bold mb-3 counter" data-target="1250">0</div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Biens vendus</h3>
+                    <p class="text-gray-600 text-sm">Transactions réussies à travers l'Algérie</p>
+                </div>
+
+                <!-- Chiffre 2 -->
+                <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+                    <div class="text-yellow-500 text-4xl font-bold mb-3 counter" data-target="950">0</div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Clients satisfaits</h3>
+                    <p class="text-gray-600 text-sm">Témoignages positifs et recommandations</p>
+                </div>
+
+                <!-- Chiffre 3 -->
+                <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+                    <div class="text-yellow-500 text-4xl font-bold mb-3 counter" data-target="12">0</div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Types de biens</h3>
+                    <p class="text-gray-600 text-sm">Appartements, locaux, terrains, promotions...</p>
+                </div>
+
+
+                <!-- Chiffre 4 -->
+                <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+                    <div class="text-yellow-500 text-4xl font-bold mb-3 counter" data-target="650">100</div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">K+ Abonnés</h3>
+                    <p class="text-gray-600 text-sm">Communauté active sur nos réseaux</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pourquoi nous choisir -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">Pourquoi choisir ElWakil ?</h2>
+                <p class="text-gray-600 mt-4">Notre expertise au service de votre projet immobilier</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition text-center">
+                    <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6 text-yellow-500">
+                        <i class="fas fa-medal text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Expertise locale</h3>
+                    <p class="text-gray-600">Une connaissance approfondie du marché immobilier algérien pour vous conseiller au mieux.</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition text-center">
+                    <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6 text-yellow-500">
+                        <i class="fas fa-handshake text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Transactions sécurisées</h3>
+                    <p class="text-gray-600">Un accompagnement juridique et administratif pour des transactions en toute sérénité.</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition text-center">
+                    <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6 text-yellow-500">
+                        <i class="fas fa-search-dollar text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Meilleur prix garanti</h3>
+                    <p class="text-gray-600">Nous négocions pour vous le meilleur prix, que vous soyez acheteur ou vendeur.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Contact - Optimisée pour l'engagement -->
+    <section class="py-16 bg-gray-900 text-white" id="contact">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Contactez ElWakil Immobilier</h2>
+                <p class="text-lg text-gray-300 max-w-2xl mx-auto">
+                    Notre équipe est disponible pour répondre à toutes vos questions immobilières
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <!-- Coordonnées -->
+                <div class="bg-gray-800 rounded-xl p-8 shadow-lg">
+                    <div class="flex items-start mb-8">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-500">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold mb-2">Notre bureau</h3>
+                            <p class="text-gray-300">{{parametres.adresse}}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start mb-8">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-500">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold mb-2">Téléphone</h3>
+                            <p class="text-gray-300">
+                                <a href="tel:{{parametres.telephone}}" class="hover:text-yellow-500 transition">{{parametres.telephone}}</a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-500">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold mb-2">Email</h3>
+                            <p class="text-gray-300">
+                                <a href="mailto:{{parametres.email}}" class="hover:text-yellow-500 transition">{{parametres.email}}</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Horaires -->
+                <div class="bg-gray-800 rounded-xl p-8 shadow-lg">
+                    <div class="flex items-start mb-8">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-500">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold mb-4">Horaires d'ouverture</h3>
+                            <ul class="space-y-3 text-gray-300">
+                                <li class="flex justify-between">
+                                    {{parametres.horaires|nl2br}}
+                                </li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-10">
+                        <h4 class="text-lg font-bold mb-4">Urgence immobilière</h4>
+                        <a href="tel:{{parametres.telephone}}" class="inline-flex items-center bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition duration-300">
+                            <i class="fas fa-phone-volume mr-2"></i> Appel d'urgence
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Réseaux sociaux -->
+                <div class="bg-gray-800 rounded-xl p-8 shadow-lg">
+                    <div class="flex items-start mb-8">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-500">
+                                <i class="fas fa-hashtag"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold mb-4">Suivez-nous</h3>
+                            <p class="text-gray-300 mb-6">Retrouvez nos dernières offres et actualités</p>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <a href="{{parametres.facebook}}" target="_blank" rel="noopener noreferrer" class="bg-gray-700 hover:bg-[#1877F2] text-white flex items-center justify-center py-3 px-4 rounded-lg transition duration-300">
+                                    <i class="fab fa-facebook-f mr-2"></i> Facebook
+                                </a>
+                                <a href="{{parametres.instagram}}" target="_blank" rel="noopener noreferrer" class="bg-gray-700 hover:bg-[#E1306C] text-white flex items-center justify-center py-3 px-4 rounded-lg transition duration-300">
+                                    <i class="fab fa-instagram mr-2"></i> Instagram
+                                </a>
+                                <a href="{{parametres.youtube}}" target="_blank" rel="noopener noreferrer" class="bg-gray-700 hover:bg-[#FF0000] text-white flex items-center justify-center py-3 px-4 rounded-lg transition duration-300">
+                                    <i class="fab fa-youtube mr-2"></i> YouTube
+                                </a>
+                                <a href="{{parametres.tiktok}}" target="_blank" rel="noopener noreferrer" class="bg-gray-700 hover:bg-black text-white flex items-center justify-center py-3 px-4 rounded-lg transition duration-300">
+                                    <i class="fab fa-tiktok mr-2"></i> TikTok
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

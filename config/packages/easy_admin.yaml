@@ -1,0 +1,16 @@
+easy_admin:
+    site_name: 'ElWakilImmobilier'
+    design:
+        assets:
+            js:
+                - 'build/admin/app.js'
+        form_theme:
+            - '@EasyAdmin/crud/form_theme.html.twig'
+    security:
+        enable: true
+        logout: 
+            enabled: true
+            path: app_logout
+            icon: 'fa fa-sign-out'
+            label: 'Déconnexion'     
+            

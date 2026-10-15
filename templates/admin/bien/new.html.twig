@@ -1,0 +1,90 @@
+{% extends '@EasyAdmin/crud/new.html.twig' %}
+
+{% block head_stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" 
+          integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" 
+          crossorigin=""/>
+    <style>
+        #property-map {
+            background-color: #f8f9fa;
+        }
+        .d-none { display: none; }
+        .leaflet-container {
+            z-index: 1 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content_footer_wrapper %}
+    <!-- Carte pour la page new -->
+    <div class="mb-4">
+        <div class="form-group">
+            <label class="form-label">
+                <i class="fa fa-map-marker-alt"></i> Position sur la carte
+            </label>
+            <div class="help-text small text-muted mb-2">
+                Cliquez sur la carte pour définir la position du bien
+            </div>
+            <div id="property-map" 
+                 style="height: 400px; width: 100%; border-radius: 8px; border: 1px solid #ddd; background-color: #f8f9fa;"></div>
+        </div>
+    </div>
+    
+    {{ parent() }}
+{% endblock %}
+
+{% block body_javascript %}
+    {{ parent() }}
+    
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+            integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+            crossorigin=""></script>
+
+    <script>
+        console.log('Leaflet est-il chargé ?', typeof L);
+        if (typeof L !== 'undefined') {
+            console.log('Leaflet version:', L.version);
+            
+            // Initialiser la carte
+            const map = L.map('property-map').setView([36.747724, 3.052905], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            
+            // Variable pour stocker le marqueur
+            let marker = null;
+            
+            // Fonction pour mettre à jour les champs latitude/longitude
+            function updateCoordinates(lat, lng) {
+                // Chercher les champs latitude et longitude dans le formulaire
+                const latField = document.querySelector('input[name*="[latitude]"]');
+                const lngField = document.querySelector('input[name*="[longitude]"]');
+                
+                if (latField) latField.value = lat.toFixed(6);
+                if (lngField) lngField.value = lng.toFixed(6);
+                
+                console.log('Coordonnées mises à jour:', lat.toFixed(6), lng.toFixed(6));
+            }
+            
+            // Événement de clic sur la carte
+            map.on('click', function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+                
+                // Supprimer l'ancien marqueur s'il existe
+                if (marker) {
+                    map.removeLayer(marker);
+                }
+                
+                // Ajouter un nouveau marqueur
+                marker = L.marker([lat, lng]).addTo(map);
+                
+                // Mettre à jour les champs du formulaire
+                updateCoordinates(lat, lng);
+            });
+            
+            console.log('Carte interactive initialisée');
+        } else {
+            console.error('Erreur : Leaflet (L) non détecté !');
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ElWakil - Agence Immobilière en Algérie{% endblock %}</title>
+    {# <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>"> #}
+    <link rel="icon" type="image/x-icon" href="{{ asset('img/logo2.jpg')}}">
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+         crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin=""/>
+    <script src="{{ asset('js/script.js') }}"></script>
+    <script src="{{ asset('js/sliders.js') }}"></script>
+    <script src="{{ asset('js/property-map.js') }}"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css">
+    <!-- noUiSlider JavaScript (ajoutez avant votre propre script) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js"></script>
+    
+    <!-- wNumb pour le formatage des nombres -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
+    
+    <!-- Police moderne -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- SplideJS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+    <!-- SplideJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        
+        .property-card {
+            transition: transform 0.3s ease;
+        }
+        
+        .property-card:hover {
+            transform: translateY(-5px);
+        }
+        /* Dans votre balise head */
+        .goog-te-banner-frame {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            position: absolute !important;
+        }
+
+        body {
+            top: 0 !important;
+        }
+
+        .skiptranslate {
+            display: none !important;
+        }
+
+        .goog-te-gadget {
+            display: none !important;
+        }
+
+    </style>
+    
+    {% block stylesheets %}{% endblock %}
+    {{ encore_entry_link_tags('app') }}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
+</head>
+<body class="bg-white">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-100">
+        <div id="google_translate_element" style="display:none; height:0; width:0; position:absolute;"></div>
+        <div class="container mx-auto px-4 lg:px-6">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="{{path('accueil')}}" class="flex items-center">
+                        <!-- Conteneur du logo avec effet story PERMANENT -->
+                        <div class="relative mr-3">
+                            <!-- Cercle orange PERMANENT -->
+                            {# <div class="absolute -inset-1 rounded-full bg-gradient-to-tr from-orange-400 to-yellow-500 p-0.5">
+                                <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-orange-400 to-yellow-500 "></div>
+                            </div> #}
+                            <!-- Logo rond -->
+                            <div class="relative flex rounded-full overflow-hidden border-2 border-white bg-white z-10">
+                                <img src="{{asset('img/logo2.jpg')}}" 
+                                    class="w-10 h-10 rounded-full object-cover" 
+                                    alt="ElWakil Agence immobiliere">
+                            </div>
+                        </div>
+                        <!-- Texte -->
+                        <span class="text-xl font-bold text-gray-900">EL<span class="text-yellow-500">WAKIL</span> IMMOBILIER</span>
+                    </a>
+                </div>
+                
+                <!-- Menu principal -->
+                <div class="hidden lg:flex items-center space-x-8">
+                    <a href="{{path('accueil')}}" class="text-gray-700 font-medium hover:text-yellow-500 transition duration-300">Accueil</a>
+                    
+                    <!-- Dropdown Acheter -->
+                    <div class="relative group">
+                        <button class="py-2 text-gray-700 font-medium hover:text-yellow-500 transition duration-300 flex items-center focus:outline-none group-hover:text-yellow-500">
+                            Acheter 
+                            <svg class="ml-1 w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute hidden bg-white shadow-xl rounded-md py-2 w-48 z-10 group-hover:block transition-all duration-300 ease-in-out transform origin-top scale-y-0 group-hover:scale-y-100 border border-gray-100">
+                            {% for type in types %}
+                                <a href="{{path('biens')}}?t=vente&type={{type.id}}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition duration-200">{{type.libelle}}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Dropdown Louer -->
+                    <div class="relative group">
+                        <button class="py-2 text-gray-700 font-medium hover:text-yellow-500 transition duration-300 flex items-center focus:outline-none group-hover:text-yellow-500">
+                            Louer 
+                            <svg class="ml-1 w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute hidden bg-white shadow-xl rounded-md py-2 w-48 z-10 group-hover:block transition-all duration-300 ease-in-out transform origin-top scale-y-0 group-hover:scale-y-100 border border-gray-100">
+                            {% for type in types %}
+                                <a href="{{path('biens')}}?t=location&type={{type.id}}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition duration-200">{{type.libelle}}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                                        
+                    <!-- Boutons de contact -->
+                    <div class="flex space-x-4">
+                        <a href="tel:0123456789" class="bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-yellow-600 transition duration-300 flex items-center">
+                            <i class="fas fa-phone mr-2"></i> Appeler
+                        </a>
+                        <a href="https://wa.me/0123456789" class="bg-gray-800 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-900 transition duration-300 flex items-center">
+                            <i class="fab fa-whatsapp mr-2"></i> WhatsApp
+                        </a>
+                    </div>
+                </div>
+
+                <div class="relative group">
+                    <button class="text-gray-700 hover:text-yellow-500 transition duration-300 focus:outline-none">
+                        <i class="fas fa-globe text-xl"></i>
+                    </button>
+                    <div class="absolute right-0 hidden bg-white shadow-lg rounded-md py-2 w-32 z-50 group-hover:block border border-gray-100">
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition flex items-center lang-switcher" data-lang="fr">
+                            <span class="mr-2">🇫🇷</span> Français
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition flex items-center lang-switcher" data-lang="ar">
+                            <span class="mr-2">🇩🇿</span> العربية
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Bouton mobile -->
+                <div class="lg:hidden">
+                    <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Menu mobile -->
+            <div id="mobile-menu" class="hidden lg:hidden pb-4">
+                <a href="{{path('accueil')}}" class="block py-3 text-gray-700 font-medium hover:text-yellow-500 transition duration-200 border-b border-gray-100">Accueil</a>
+                
+                <div class="py-2 border-b border-gray-100">
+                    <button class="mobile-dropdown-btn flex items-center text-gray-700 font-medium w-full justify-between focus:outline-none hover:text-yellow-500 py-3" data-target="mobile-buy-menu">
+                        Acheter
+                        <svg class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="mobile-dropdown-menu pl-4 hidden bg-gray-50 rounded-md my-1" id="mobile-buy-menu">
+                        {% for type in types %}
+                            <a href="{{path('biens')}}?t=vente&type={{type.id}}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200">{{type.libelle}}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="py-2 border-b border-gray-100">
+                    <button class="mobile-dropdown-btn flex items-center text-gray-700 font-medium w-full justify-between focus:outline-none hover:text-yellow-500 py-3" data-target="mobile-rent-menu">
+                        Louer
+                        <svg class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="mobile-dropdown-menu pl-4 hidden bg-gray-50 rounded-md my-1" id="mobile-rent-menu">
+                        {% for type in types %}
+                            <a href="{{path('biens')}}?t=location&type={{type.id}}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200">{{type.libelle}}</a>
+                        {% endfor %}    
+                    </div>
+                </div>
+                                
+                <div class="mt-4 space-y-2">
+                    <a href="tel:{{parametres.telephone}}" class="block text-center bg-yellow-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-yellow-600 transition duration-300 flex items-center justify-center">
+                        <i class="fas fa-phone mr-2"></i> Appeler
+                    </a>
+                    <a href="https://wa.me/{{parametres.telephone}}" class="block text-center bg-gray-800 text-white font-bold py-3 px-4 rounded-lg hover:bg-gray-900 transition duration-300 flex items-center justify-center">
+                        <i class="fab fa-whatsapp mr-2"></i> WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- JavaScript pour le fonctionnement du menu -->
+    <script>
+        // Toggles the mobile menu visibility
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Setup all mobile dropdown menus
+        document.querySelectorAll('.mobile-dropdown-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const targetMenu = document.getElementById(targetId);
+                
+                // Toggle this specific dropdown
+                targetMenu.classList.toggle('hidden');
+                
+                // Rotate arrow icon
+                const arrow = this.querySelector('svg');
+                arrow.classList.toggle('rotate-180');
+            });
+        });
+    </script>
+
+    {% block body %}
+    {% endblock %}
+
+    <!-- Bouton principal Messenger -->
+    <a href="https://m.me/111107311979084" target="_blank" 
+    class="fixed z-10 bottom-4 right-4 h-12 w-12 bg-blue-600 text-white px-3 py-3 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition hidden"
+    id="messenger-button">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="white" viewBox="0 0 24 24">
+        <path d="M12 2C6.486 2 2 6.092 2 11c0 2.537 1.167 4.839 3.067 6.486L4 22l4.677-2.55A11.638 11.638 0 0012 20c5.514 0 10-4.092 10-9s-4.486-9-10-9zm.66 12.198l-2.408-2.573-5.012 2.573 6.29-6.728 2.407 2.574 5.012-2.574-6.289 6.728z"/>
+    </svg>
+    </a>
+
+    <!-- Message "Contactez-nous" -->
+    <div id="messenger-message" 
+        class="fixed z-10 bottom-16 right-4 bg-white text-gray-800 px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-bounce transition-all duration-500 hidden">
+        <span>💬 Contactez-nous sur Messenger</span>
+        <button onclick="closeAllMessenger()" class="text-gray-500 hover:text-red-500 text-sm font-bold">✕</button>
+    </div>
+
+    <!-- Script -->
+    <script>
+        let timeoutId; // Variable pour stocker le timeout et éviter les conflits
+
+        // Fonction pour tout afficher
+        function showAllMessenger() {
+            const button = document.getElementById("messenger-button");
+            const messageBox = document.getElementById("messenger-message");
+            
+            if (button) button.classList.remove("hidden");
+            if (messageBox) messageBox.classList.remove("hidden");
+            
+            // Programmer la prochaine apparition dans 6 secondes
+            timeoutId = setTimeout(showAllMessenger, 10000);
+        }
+
+        // Fonction pour tout masquer
+        function closeAllMessenger() {
+            const button = document.getElementById("messenger-button");
+            const messageBox = document.getElementById("messenger-message");
+            
+            if (button) button.classList.add("hidden");
+            if (messageBox) messageBox.classList.add("hidden");
+            
+            // Annuler le précédent timeout s'il existe
+            if (timeoutId) clearTimeout(timeoutId);
+            
+            // Relancer un nouveau délai de 6 secondes après le clic
+            timeoutId = setTimeout(showAllMessenger, 10000);
+        }
+
+        // Démarrer le cycle après 6 secondes (première apparition)
+        timeoutId = setTimeout(showAllMessenger, 10000);
+    </script>
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4 rounded-full overfolw-hidden">
+                        {# <img src="{{asset('img/logo2.jpg')}}" class="w-10 h-10" alt="ElWakil Agence immobiliere">
+                        <span class="ml-2 text-2xl font-bold text-white">EL<span class="text-yellow-500">WAKIL</span></span> #}
+                        <a href="{{path('accueil')}}" class="flex items-center">
+                            <!-- Conteneur du logo avec effet story -->
+                            <div class="relative">
+                                <!-- Cercle orange (effet story) -->
+                                <div class="absolute -inset-1 rounded-full bg-gradient-to-tr from-orange-400 to-yellow-500 p-0.5 animate-pulse">
+                                    <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-orange-400 to-yellow-500 blur-sm"></div>
+                                </div>
+                                <!-- Logo rond -->
+                                <div class="relative flex -space-x-2 rounded-full overflow-hidden border-2 border-white bg-white">
+                                    <img src="{{asset('img/logo2.jpg')}}" class="w-10 h-10 rounded-full object-cover" alt="ElWakil Agence immobiliere">
+                                </div>
+                            </div>
+                            <!-- Texte -->
+                            <span class="ml-3 text-2xl font-bold text-white">EL<span class="text-yellow-500">WAKIL</span> IMMOBILIER</span>
+                        </a>
+                    </div>
+                    <p class="text-gray-300">Votre partenaire immobilier de confiance en Algérie.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="{{parametres.facebook}}" class="text-gray-300 hover:text-yellow-500 transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="{{parametres.instagram}}" class="text-gray-300 hover:text-yellow-500 transition"><i class="fab fa-instagram"></i></a>
+                        <a href="{{parametres.youtube}}" class="text-gray-300 hover:text-yellow-500 transition"><i class="fab fa-youtube"></i></a>
+                        <a href="{{parametres.tiktok}}" class="text-gray-300 hover:text-yellow-500 transition"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-yellow-500">Liens rapides</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{{path('accueil')}}" class="hover:text-yellow-500 transition">Accueil</a></li>
+                        <li><a href="{{path('biens')}}?t=vente" class="hover:text-yellow-500 transition">Acheter</a></li>
+                        <li><a href="{{path('biens')}}?t=location" class="hover:text-yellow-500 transition">Louer</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-yellow-500">Types de biens</h3>
+                    <ul class="space-y-2">
+                        {% for type in types|slice(0, 4) %}
+                        <li><a href="{{path('biens')}}?type={{type.id}}" class="hover:text-yellow-500 transition">{{type.libelle}}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-yellow-500">Contact</h3>
+                    <address class="not-italic">
+                        <p class="mb-2 flex items-center"><i class="fas fa-map-marker-alt mr-2 text-yellow-500"></i> {{parametres.adresse}}</p>
+                        <p class="mb-2 flex items-center"><i class="fas fa-phone mr-2 text-yellow-500"></i> {{parametres.telephone}}</p>
+                        <p class="mb-2 flex items-center"><i class="fas fa-envelope mr-2 text-yellow-500"></i>{{parametres.email}}</p>
+                    </address>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>
+                    &copy; {{ "now"|date("Y") }} ElWakil Immobilier. Tous droits réservés.
+                    <br class="sm:hidden"> <!-- Saut de ligne sur mobile -->
+                    <span class="mt-2 sm:mt-0 inline-block"> <!-- Marge top sur mobile -->
+                        Développé par 
+                        <a href="http://w3mohamed.infinityfreeapp.com" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        class="text-yellow-400 hover:text-yellow-600 hover:underline transition">
+                            W3mohamed
+                        </a>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
